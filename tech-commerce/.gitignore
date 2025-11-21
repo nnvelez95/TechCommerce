@@ -47,5 +47,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # Frontend build
-frontend/dist/
-frontend/build/
+src/main/resources/static/frontend/dist/
+src/main/resources/static/frontend/build/
