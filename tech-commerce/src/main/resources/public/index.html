@@ -12,7 +12,7 @@
     <!-- Header -->
     <header class="header">
         <h1>🛒 TechCommerce</h1>
-        <p>Sistema de Gestión de E-commerce</p>
+        <p>Sistema Profesional de Gestión E-commerce</p>
     </header>
 
     <!-- Menú Principal -->
@@ -45,7 +45,7 @@
     <!-- Contenido Dinámico -->
     <main class="main-content">
         <!-- Gestión de Productos -->
-        <section id="gestion-productos" class="seccion">
+        <section id="gestion-productos" class="seccion activa">
             <h2>📦 Gestión de Productos</h2>
             <div class="submenu">
                 <button onclick="mostrarSubseccion('agregar-producto')">➕ Agregar Producto</button>
@@ -60,12 +60,12 @@
                 <h3>Agregar Nuevo Producto</h3>
                 <form id="form-agregar-producto" class="form-producto">
                     <input type="text" id="nombre" placeholder="Nombre del producto" required>
-                    <textarea id="descripcion" placeholder="Descripción"></textarea>
-                    <input type="number" id="precio" placeholder="Precio" step="0.01" required>
+                    <textarea id="descripcion" placeholder="Descripción del producto" rows="3"></textarea>
+                    <input type="number" id="precio" placeholder="Precio ($)" step="0.01" min="0" required>
                     <input type="text" id="categoria" placeholder="Categoría" required>
-                    <input type="text" id="imagenUrl" placeholder="URL de la imagen">
-                    <input type="number" id="stock" placeholder="Stock" required>
-                    <button type="submit">Agregar Producto</button>
+                    <input type="text" id="imagenUrl" placeholder="URL de la imagen (opcional)">
+                    <input type="number" id="stock" placeholder="Stock disponible" min="0" required>
+                    <button type="submit">➕ Agregar Producto</button>
                 </form>
             </div>
 
@@ -73,45 +73,86 @@
                 <h3>Lista de Productos</h3>
                 <div id="lista-productos" class="grid-productos">
                     <!-- Los productos se cargarán aquí con JavaScript -->
+                    <div class="texto-centro">
+                        <p>Cargando productos...</p>
+                    </div>
                 </div>
             </div>
 
             <div id="buscar-producto" class="subseccion">
-                <h3>Buscar Producto</h3>
+                <h3>Buscar Productos</h3>
                 <div class="busqueda">
-                    <input type="text" id="termino-busqueda" placeholder="Buscar por nombre o categoría...">
+                    <input type="text" id="termino-busqueda" placeholder="Buscar por nombre, categoría o descripción...">
                     <button onclick="buscarProductos()">🔍 Buscar</button>
                 </div>
                 <div id="resultados-busqueda" class="grid-productos">
-                    <!-- Resultados de búsqueda -->
+                    <!-- Resultados de búsqueda aparecerán aquí -->
+                    <div class="texto-centro">
+                        <p>Ingresa un término de búsqueda para comenzar</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="actualizar-producto" class="subseccion">
+                <h3>Actualizar Producto</h3>
+                <div class="texto-centro">
+                    <p>🔧 Funcionalidad en desarrollo</p>
+                    <p>Próximamente podrás actualizar productos existentes</p>
+                </div>
+            </div>
+
+            <div id="eliminar-producto" class="subseccion">
+                <h3>Eliminar Producto</h3>
+                <div class="texto-centro">
+                    <p>🗑️ Funcionalidad en desarrollo</p>
+                    <p>Próximamente podrás eliminar productos del sistema</p>
                 </div>
             </div>
         </section>
 
-        <!-- Otras secciones se implementarán después -->
+        <!-- Gestión de Categorías -->
         <section id="gestion-categorias" class="seccion oculta">
             <h2>🏷️ Gestión de Categorías</h2>
-            <p>Próximamente...</p>
+            <div class="texto-centro">
+                <p>📊 Funcionalidad en desarrollo</p>
+                <p>Próximamente podrás gestionar categorías de productos</p>
+            </div>
         </section>
 
+        <!-- Carrito de Compras -->
         <section id="carrito" class="seccion oculta">
             <h2>🛒 Carrito de Compras</h2>
-            <p>Próximamente...</p>
+            <div class="texto-centro">
+                <p>🛍️ Funcionalidad en desarrollo</p>
+                <p>Próximamente podrás agregar productos al carrito y gestionar tu compra</p>
+            </div>
         </section>
 
+        <!-- Realizar Pedido -->
         <section id="realizar-pedido" class="seccion oculta">
             <h2>📋 Realizar Pedido</h2>
-            <p>Próximamente...</p>
+            <div class="texto-centro">
+                <p>📦 Funcionalidad en desarrollo</p>
+                <p>Próximamente podrás realizar pedidos completos del sistema</p>
+            </div>
         </section>
 
+        <!-- Historial de Pedidos -->
         <section id="historial-pedidos" class="seccion oculta">
             <h2>📊 Historial de Pedidos</h2>
-            <p>Próximamente...</p>
+            <div class="texto-centro">
+                <p>📈 Funcionalidad en desarrollo</p>
+                <p>Próximamente podrás consultar el historial completo de pedidos</p>
+            </div>
         </section>
 
+        <!-- Administración -->
         <section id="administracion" class="seccion oculta">
             <h2>⚙️ Administración</h2>
-            <p>Próximamente...</p>
+            <div class="texto-centro">
+                <p>🔧 Funcionalidad en desarrollo</p>
+                <p>Próximamente podrás acceder a las herramientas de administración del sistema</p>
+            </div>
         </section>
     </main>
 </div>
@@ -124,6 +165,31 @@
     </div>
 </div>
 
-<script src="/js/app.js"></script>
+<script>
+    // Funciones globales temporales para el menú
+    function mostrarSeccion(seccionId) {
+        if (typeof window.mostrarSeccionCompleta === 'function') {
+            window.mostrarSeccionCompleta(seccionId);
+        } else {
+            console.log('JavaScript cargando, sección:', seccionId);
+        }
+    }
+
+    function mostrarSubseccion(subseccionId) {
+        if (typeof window.mostrarSubseccionCompleta === 'function') {
+            window.mostrarSubseccionCompleta(subseccionId);
+        }
+    }
+
+    function salir() {
+        if (typeof window.salirCompleto === 'function') {
+            window.salirCompleto();
+        } else {
+            if (confirm('¿Estás seguro de que quieres salir?')) {
+                alert('¡Hasta pronto! 👋');
+            }
+        }
+    }
+</script>
 </body>
 </html>

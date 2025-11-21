@@ -5,7 +5,7 @@ const API_BASE_URL = '/api';
 let estado = {
     productos: [],
     carrito: [],
-    usuarioId: 1 // Temporal - luego implementaremos autenticación
+    usuarioId: 1
 };
 
 // Inicialización
@@ -21,8 +21,18 @@ function configurarEventos() {
     document.getElementById('form-agregar-producto').addEventListener('submit', agregarProducto);
 }
 
+// Función para mostrar loading
+function mostrarLoading(mostrar) {
+    const mainContent = document.querySelector('.main-content');
+    if (mostrar) {
+        mainContent.classList.add('cargando');
+    } else {
+        mainContent.classList.remove('cargando');
+    }
+}
+
 // Navegación
-function mostrarSeccion(seccionId) {
+function mostrarSeccionCompleta(seccionId) {
     // Ocultar todas las secciones
     document.querySelectorAll('.seccion').forEach(seccion => {
         seccion.classList.remove('activa');
@@ -47,7 +57,7 @@ function mostrarSeccion(seccionId) {
     }
 }
 
-function mostrarSubseccion(subseccionId) {
+function mostrarSubseccionCompleta(subseccionId) {
     // Ocultar todas las subsecciones
     document.querySelectorAll('.subseccion').forEach(sub => {
         sub.classList.remove('activa');
@@ -63,13 +73,21 @@ function mostrarSubseccion(subseccionId) {
 // Funciones de Productos
 async function cargarProductos() {
     try {
+        mostrarLoading(true);
         const respuesta = await fetch(`${API_BASE_URL}/productos`);
-        if (!respuesta.ok) throw new Error('Error al cargar productos');
+
+        if (!respuesta.ok) {
+            throw new Error(`Error HTTP: ${respuesta.status}`);
+        }
 
         estado.productos = await respuesta.json();
         renderizarProductos(estado.productos);
+
     } catch (error) {
-        mostrarError('Error al cargar productos: ' + error.message);
+        console.error('Error:', error);
+        mostrarError('No se pudieron cargar los productos: ' + error.message);
+    } finally {
+        mostrarLoading(false);
     }
 }
 
@@ -78,7 +96,7 @@ function renderizarProductos(productos) {
     contenedor.innerHTML = '';
 
     if (productos.length === 0) {
-        contenedor.innerHTML = '<p>No hay productos disponibles.</p>';
+        contenedor.innerHTML = '<div class="texto-centro"><p>No hay productos disponibles en este momento.</p></div>';
         return;
     }
 
@@ -86,18 +104,22 @@ function renderizarProductos(productos) {
         const productoHTML = `
             <div class="producto-card">
                 ${producto.imagenUrl ?
-                    `<img src="${producto.imagenUrl}" alt="${producto.nombre}" class="producto-imagen" onerror="this.style.display='none'">` :
-                    '<div class="producto-imagen" style="background: #ddd; display: flex; align-items: center; justify-content: center; color: #666;">📷 Sin imagen</div>'
+                    `<img src="${producto.imagenUrl}" alt="${producto.nombre}" class="producto-imagen" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">` :
+                    ''
+                }
+                ${!producto.imagenUrl ?
+                    `<div class="producto-imagen">📱</div>` :
+                    '<div class="producto-imagen" style="display: none;">📱</div>'
                 }
                 <div class="producto-nombre">${producto.nombre}</div>
-                <div class="producto-precio">$${producto.precio}</div>
+                <div class="producto-precio">$${producto.precio.toFixed(2)}</div>
                 <span class="producto-categoria">${producto.categoria}</span>
-                <div class="producto-stock">Stock: ${producto.stock}</div>
-                <div class="producto-descripcion">${producto.descripcion || 'Sin descripción'}</div>
+                <div class="producto-stock">📦 Stock: ${producto.stock} unidades</div>
+                <div class="producto-descripcion">${producto.descripcion || 'Sin descripción disponible'}</div>
                 <button onclick="agregarAlCarrito(${producto.id})"
                         ${producto.stock === 0 ? 'disabled' : ''}
                         class="btn-agregar">
-                    ${producto.stock === 0 ? 'Sin stock' : '➕ Agregar al carrito'}
+                    ${producto.stock === 0 ? '❌ Sin stock' : '🛒 Agregar al carrito'}
                 </button>
             </div>
         `;
@@ -108,7 +130,6 @@ function renderizarProductos(productos) {
 async function agregarProducto(evento) {
     evento.preventDefault();
 
-    const formData = new FormData(evento.target);
     const producto = {
         nombre: document.getElementById('nombre').value,
         descripcion: document.getElementById('descripcion').value,
@@ -119,6 +140,7 @@ async function agregarProducto(evento) {
     };
 
     try {
+        mostrarLoading(true);
         const respuesta = await fetch(`${API_BASE_URL}/productos`, {
             method: 'POST',
             headers: {
@@ -134,10 +156,13 @@ async function agregarProducto(evento) {
 
         const nuevoProducto = await respuesta.json();
         mostrarMensaje(`✅ Producto "${nuevoProducto.nombre}" creado exitosamente`);
-        evento.target.reset();
-        cargarProductos(); // Recargar lista
+        document.getElementById('form-agregar-producto').reset();
+        cargarProductos();
+
     } catch (error) {
         mostrarError('Error al crear producto: ' + error.message);
+    } finally {
+        mostrarLoading(false);
     }
 }
 
@@ -150,6 +175,7 @@ async function buscarProductos() {
     }
 
     try {
+        mostrarLoading(true);
         const respuesta = await fetch(`${API_BASE_URL}/productos/buscar?termino=${encodeURIComponent(termino)}`);
         if (!respuesta.ok) throw new Error('Error en la búsqueda');
 
@@ -157,27 +183,30 @@ async function buscarProductos() {
         const contenedor = document.getElementById('resultados-busqueda');
 
         if (productos.length === 0) {
-            contenedor.innerHTML = '<p>No se encontraron productos.</p>';
+            contenedor.innerHTML = '<div class="texto-centro"><p>No se encontraron productos que coincidan con tu búsqueda.</p></div>';
         } else {
             contenedor.innerHTML = '';
             productos.forEach(producto => {
                 contenedor.innerHTML += `
                     <div class="producto-card">
                         <div class="producto-nombre">${producto.nombre}</div>
-                        <div class="producto-precio">$${producto.precio}</div>
+                        <div class="producto-precio">$${producto.precio.toFixed(2)}</div>
                         <span class="producto-categoria">${producto.categoria}</span>
+                        <div class="producto-stock">Stock: ${producto.stock}</div>
                     </div>
                 `;
             });
         }
     } catch (error) {
         mostrarError('Error en la búsqueda: ' + error.message);
+    } finally {
+        mostrarLoading(false);
     }
 }
 
 // Funciones del Carrito (próxima implementación)
 function agregarAlCarrito(productoId) {
-    mostrarMensaje('Funcionalidad de carrito en desarrollo');
+    mostrarMensaje('🛒 Funcionalidad de carrito en desarrollo - Próximamente');
 }
 
 function actualizarCarrito() {
@@ -199,15 +228,26 @@ function cerrarModal() {
     document.getElementById('modal').classList.add('oculta');
 }
 
-function salir() {
+function salirCompleto() {
     if (confirm('¿Estás seguro de que quieres salir?')) {
-        mostrarMensaje('¡Hasta pronto! 👋');
+        mostrarMensaje('¡Gracias por usar TechCommerce! 👋');
         setTimeout(() => {
-            // En una aplicación real, aquí redirigiríamos o limpiaríamos la sesión
-            document.body.innerHTML = '<h1 style="text-align: center; margin-top: 50px;">¡Gracias por usar TechCommerce! 🛒</h1>';
+            document.body.innerHTML = `
+                <div class="container" style="display: flex; align-items: center; justify-content: center; height: 100vh;">
+                    <div class="texto-centro">
+                        <h1 style="color: white; font-size: 2.5rem;">¡Hasta pronto! 👋</h1>
+                        <p style="color: white; opacity: 0.8;">TechCommerce - Sistema de Gestión</p>
+                    </div>
+                </div>
+            `;
         }, 2000);
     }
 }
 
+// Hacer funciones globales
+window.mostrarSeccionCompleta = mostrarSeccionCompleta;
+window.mostrarSubseccionCompleta = mostrarSubseccionCompleta;
+window.salirCompleto = salirCompleto;
+
 // Inicializar con la sección de productos
-mostrarSeccion('gestion-productos');
+mostrarSeccionCompleta('gestion-productos');
