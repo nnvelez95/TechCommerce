@@ -1,25 +1,24 @@
-# 🚀 TechCommerce - Sistema de E-commerce
+# 🚀 TechCommerce - Sistema de E-commerce Completo
 
-Sistema completo de gestión de e-commerce desarrollado en Java con Spring Boot para productos tecnológicos, con API RESTful y pronto frontend en JavaScript.
+Sistema completo de gestión de e-commerce desarrollado en **Java Spring Boot** con **frontend integrado**, para productos tecnológicos.
 
-## 📋 Características Implementadas
+## 📋 Estado del Proyecto
 
-### ✅ Backend Completo
-- **Gestión de Productos**: CRUD completo con validaciones
-- **Sistema de Pedidos**: Creación con control de stock automático
-- **Búsquedas Avanzadas**: Por nombre, categoría o término general
-- **Manejo de Excepciones**: Personalizadas para errores específicos
-- **Validaciones de Stock**: Prevención de pedidos con stock insuficiente
-- **Estados de Pedido**: PENDIENTE, CONFIRMADO, ENVIADO, ENTREGADO, CANCELADO
-- **Base de Datos H2**: Con datos de prueba de productos tecnológicos
+### ✅ **COMPLETADO**
+- **Backend API RESTful** completo con Spring Boot
+- **Frontend integrado** servido desde el mismo backend
+- **Base de datos H2** con datos de prueba
+- **Gestión de productos** (CRUD completo)
+- **Sistema de búsquedas** avanzadas
+- **Arquitectura en capas** (Controller-Service-Repository)
 
-### 🚧 Próximamente (Frontend)
-- Interfaz web responsive
+### 🚧 **EN DESARROLLO**
 - Carrito de compras
-- Historial de pedidos
+- Sistema de pedidos
+- Gestión de categorías
 - Panel de administración
 
-## 🛠️ Tecnologías
+## 🛠️ Tecnologías Implementadas
 
 ### Backend
 - **Java 17**
@@ -27,37 +26,47 @@ Sistema completo de gestión de e-commerce desarrollado en Java con Spring Boot 
 - **Spring Data JPA**
 - **H2 Database** (desarrollo)
 - **Maven**
-- **Jakarta Persistence**
 
-### Frontend (Próximo)
-- HTML5, CSS3, JavaScript ES6+
-- Consumo de API REST
-- Arquitectura modular
+### Frontend
+- **HTML5, CSS3, JavaScript ES6+**
+- **Diseño responsive**
+- **Consumo de API REST**
+- **Arquitectura modular**
 
-## 🚀 Ejecución
+## 🚀 Ejecución del Proyecto
 
-# Clonar el repositorio
+### Requisitos
+- Java 17 o superior
+- Maven 3.6+
+
+### Pasos para ejecutar
+
+# 1. Clonar el repositorio
 git clone https://github.com/tu-usuario/tech-commerce.git
 
-# Navegar al directorio
+# 2. Navegar al directorio
 cd tech-commerce
 
-# Ejecutar la aplicación
+# 3. Ejecutar la aplicación
 mvn spring-boot:run
 
-La aplicación estará disponible en: [http://localhost:8080](http://localhost:8080/)
+### Acceso a la aplicación
 
-**Consola H2 Database:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+*   **Aplicación principal:** [http://localhost:8080](http://localhost:8080/)
+    
+*   **API REST:** [http://localhost:8080/api](http://localhost:8080/api)
+    
+*   **Consola H2:** [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+    
+    *   JDBC URL: jdbc:h2:mem:techcommercedb
+        
+    *   Usuario: sa
+        
+    *   Password: (vacío)
+        
 
-*   JDBC URL: jdbc:h2:mem:techcommercedb
-    
-*   Username: sa
-    
-*   Password: (vacío)
-    
-
-📚 API Endpoints
-----------------
+📚 API Endpoints Disponibles
+----------------------------
 
 ### Productos
 
@@ -71,13 +80,11 @@ La aplicación estará disponible en: [http://localhost:8080](http://localhost:
     
 *   DELETE /api/productos/{id} - Eliminar producto
     
-*   GET /api/productos/buscar?nombre={nombre} - Buscar por nombre
+*   GET /api/productos/buscar?termino={valor} - Búsqueda general
     
-*   GET /api/productos/buscar?categoria={categoria} - Buscar por categoría
+*   GET /api/productos/buscar?nombre={valor} - Búsqueda por nombre
     
-*   GET /api/productos/buscar?termino={termino} - Búsqueda general
-    
-*   GET /api/productos/stock-bajo?stockMinimo=10 - Productos con stock bajo
+*   GET /api/productos/buscar?categoria={valor} - Búsqueda por categoría
     
 
 ### Pedidos
@@ -88,116 +95,93 @@ La aplicación estará disponible en: [http://localhost:8080](http://localhost:
     
 *   POST /api/pedidos - Crear nuevo pedido
     
-*   PUT /api/pedidos/{id}/estado - Actualizar estado del pedido
-    
-*   POST /api/pedidos/{id}/cancelar - Cancelar pedido
+*   PUT /api/pedidos/{id}/estado - Actualizar estado
     
 *   GET /api/pedidos/usuario/{usuarioId} - Pedidos por usuario
+*   🎯 Funcionalidades Implementadas
+--------------------------------
+
+### Backend
+
+*   ✅ Arquitectura RESTful completa
     
-*   GET /api/pedidos/estado/{estado} - Pedidos por estado
+*   ✅ Validaciones y manejo de excepciones
     
-*   GET /api/pedidos/recientes - Pedidos últimos 7 días
+*   ✅ Operaciones CRUD para productos y pedidos
     
-*   GET /api/pedidos/estadisticas - Estadísticas de pedidos
+*   ✅ Control de stock automático
+    
+*   ✅ Búsquedas y filtros avanzados
+    
+*   ✅ Base de datos en memoria con datos de prueba
     
 
-📊 Modelo de Datos
-------------------
+### Frontend
 
-### Producto
-
-*   id (Long) - Identificador único
+*   ✅ Interfaz de usuario responsive
     
-*   nombre (String) - Nombre del producto
+*   ✅ Navegación entre secciones
     
-*   descripcion (String) - Descripción detallada
+*   ✅ Listado y búsqueda de productos
     
-*   precio (Double) - Precio unitario
+*   ✅ Formulario para agregar productos
     
-*   categoria (String) - Categoría del producto
+*   ✅ Integración completa con API
     
-*   imagenUrl (String) - URL de la imagen
-    
-*   stock (Integer) - Cantidad disponible
+*   ✅ Manejo de errores y loading states
     
 
-### Pedido
+🎮 Cómo Usar la Aplicación
+--------------------------
 
-*   id (Long) - Identificador único
+1.  **Al acceder a** [**http://localhost:8080**](http://localhost:8080/) verás el menú principal
     
-*   usuarioId (Long) - ID del usuario
+2.  **En "Gestión de Productos"** puedes:
     
-*   fechaCreacion (LocalDateTime) - Fecha de creación
-    
-*   estado (EstadoPedido) - Estado del pedido
-    
-*   items (List) - Líneas de pedido
-    
-
-### LineaPedido
-
-*   id (Long) - Identificador único
-    
-*   producto (Producto) - Producto asociado
-    
-*   cantidad (Integer) - Cantidad solicitada
-    
-*   pedido (Pedido) - Pedido asociado
+    *   Ver todos los productos
+        
+    *   Buscar productos por nombre o categoría
+        
+    *   Agregar nuevos productos
+        
+3.  **Próximamente:** Carrito, pedidos, y más funcionalidades
     
 
-🎯 Estados de Pedido
---------------------
+🔧 Desarrollo
+-------------
 
-*   **PENDIENTE** - Pedido creado pero no confirmado
+### Próximas Características
+
+*   Carrito de compras
     
-*   **CONFIRMADO** - Pedido confirmado y stock reservado
+*   Sistema completo de pedidos
     
-*   **ENVIADO** - Pedido enviado al cliente
-    
-*   **ENTREGADO** - Pedido entregado exitosamente
-    
-*   **CANCELADO** - Pedido cancelado (stock devuelto si estaba confirmado)
-    
-
-🐛 Solución de Problemas
-------------------------
-
-### Error de conexión a H2
-
-Verificar que la URL sea: jdbc:h2:mem:techcommercedb
-
-### Error de mapeo ambiguo
-
-Asegurarse de no tener endpoints duplicados en los controllers
-
-👨‍💻 Desarrollo
-----------------
-
-### Próximas características
-
-*   Frontend en JavaScript
-    
-*   Sistema de autenticación
-    
-*   Carrito de compras persistente
+*   Gestión de categorías
     
 *   Panel de administración
     
+*   Sistema de usuarios
+    
 *   Tests unitarios e integración
     
-*   Dockerización
-    
 
-### Requisitos de desarrollo
+### Estructura de Datos
 
-*   Java 17 o superior
+La aplicación incluye datos de prueba de productos tecnológicos:
+
+*   Laptops, smartphones, tablets
     
-*   Maven 3.6+
+*   Audio, wearables, gaming
     
-*   IntelliJ IDEA o Eclipse
+*   Precios y stock realistas
     
 
 📝 Licencia
 -----------
 
 Este proyecto es desarrollado con fines educativos como parte del curso de Backend en Java.
+
+👏 Autor
+--------
+
+Desarrollado como proyecto final del curso de Backend Java.
